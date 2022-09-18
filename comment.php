@@ -16,18 +16,22 @@
         <h6 class="dark-text">'.$post["post_description"].'</h6>
         <hr>
         <p class="dark-text">Created At: '.$post["created_at"].'</p>
-        <p class="dark-text">Last Updated: '.$post["updated_at"].'</p>
-        <form method="post" action="./comment.php?id='.$_GET["id"].'&name='.$_GET["name"].'">
-      <div class="mb-3">
-        <input type="text" class="form-control" id="comment" aria-describedby="emailHelp" placeholder="Write Your Comments..." name="comment">
-      </div>
-      <button type="submit" class="btn btn-secondary" name="postcomment">Post a Comment</button>
-      <a href="./categories.php?name='.$category_name.'" class="btn btn-primary">Go back.</a>
-      </form>
-    </div>    
-  </div>
-</div>
-<hr>';
+        <p class="dark-text">Last Updated: '.$post["updated_at"].'</p>';
+        if(isset($_SESSION["email"])&&isset($_SESSION["password"]))
+        {
+          echo '<form method="post" action="./comment.php?id='.$_GET["id"].'&name='.$_GET["name"].'">
+          <div class="mb-3">
+            <input type="text" class="form-control" id="comment" aria-describedby="emailHelp" placeholder="Write Your Comments..." name="comment">
+          </div>
+          <button type="submit" class="btn btn-secondary" name="postcomment">Post a Comment</button>
+          <a href="./categories.php?name='.$category_name.'" class="btn btn-primary">Go back.</a>
+          </form>';
+        }
+        else
+        {
+          echo '<h2 class="text-primary">Login/signup to post.</h2>';
+        }
+        echo '</div> </div></div><hr>';
 echo "<h2>Comments</h2>";
 if(!$comment)
 {

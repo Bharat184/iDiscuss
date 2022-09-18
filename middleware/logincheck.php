@@ -8,6 +8,6 @@
    }
    else if((!isset($_SESSION["email"]) && !isset($_SESSION["password"])) &&!in_array($url_loc,["login.php","signup.php"]))
    {
-     header("Location: ./login.php");
+    //  header("Location: ./login.php");
    }
 ?>

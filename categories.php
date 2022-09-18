@@ -35,8 +35,11 @@
         default: $id="51u0in6hg1";
       }
 
-      require './includable/add_modal.php';
-      require './includable/edit_modal.php';
+      if(isset($_SESSION["email"])&&isset($_SESSION["password"]))
+      {
+        require './includable/add_modal.php';
+        require './includable/edit_modal.php';
+      }
 
       
       echo '<div class="container col-xxl-8 ">
@@ -52,9 +55,14 @@
           <p class="text-dark">Do not post “offensive” posts, links or images. ...</p>
           <p class="text-dark">Do not cross post questions. ...</p>
           <p class="text-dark">Do not PM users asking for help. ...</p>
-          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-            <button type="button" class="btn btn-secondary btn-lg px-4 me-md-2 text-black" id="postThreadBtn">Post a Doubt.</button>
-          </div>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">';
+          if(isset($_SESSION["email"])&&isset($_SESSION["password"]))
+          {
+            echo '<button type="button" class="btn btn-secondary btn-lg px-4 me-md-2 text-black" id="postThreadBtn">Post a Doubt.</button>';
+          }else{
+            echo '<h2 class="text-primary">Login/signup to post.</h2>';
+          }
+          echo '</div>
         </div>
       </div>
     </div>';

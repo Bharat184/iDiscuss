@@ -58,16 +58,19 @@
     function session_check($email,$password,$onlyid=false)
     {
         global $conn;
-        $sql="select * from users where user_email='{$email}' && password='{$password}'";
-        $query=mysqli_query($conn,$sql);
-        if(mysqli_num_rows($query)==1)
+        if(isset($_SESSION["email"]) && ($_SESSION["password"]))
         {
-            $row=mysqli_fetch_assoc($query);
-            if($onlyid)
+            $sql="select * from users where user_email='{$email}' && password='{$password}'";
+            $query=mysqli_query($conn,$sql);
+            if(mysqli_num_rows($query)==1)
             {
-                return $row["user_id"];
+                $row=mysqli_fetch_assoc($query);
+                if($onlyid)
+                {
+                    return $row["user_id"];
+                }
+                return ["id"=>$row["user_id"],"name"=>$row["user_name"]];
             }
-            return ["id"=>$row["user_id"],"name"=>$row["user_name"]];
         }
         return false;
     }
@@ -153,11 +156,18 @@
                 $arr=["id"=>$row["post_id"],"title"=>$row["post_title"],"desc"=>$row["post_description"],"cat_name"=>$category_name];
                 $json=json_encode($arr);
                 $json=base64_encode($json);
-                if($row["user_id"]==session_check($_SESSION["email"],$_SESSION["password"],true))
+                if(isset($_SESSION["email"])&&isset($_SESSION["password"]))
                 {
-                    $links='<a href="./comment.php?id='.base64_encode($row["post_id"]).'&name='.base64_encode($category_name).'"><img class="mx-1" src="./images/comment.png" style="height:20px;"></a>
-                    <img class="mx-1" src="./images/edit.png" style="height:20px;" data-json='.$json.' onclick="handlepostedit(this)">
-                    <img class="mx-1" src="./images/delete.png" style="height:20px;" data-json='.$json.' onclick="handlepostdelete(this)">';
+                    if($row["user_id"]==session_check($_SESSION["email"],$_SESSION["password"],true))
+                    {
+                        $links='<a href="./comment.php?id='.base64_encode($row["post_id"]).'&name='.base64_encode($category_name).'"><img class="mx-1" src="./images/comment.png" style="height:20px;"></a>
+                        <img class="mx-1" src="./images/edit.png" style="height:20px;" data-json='.$json.' onclick="handlepostedit(this)">
+                        <img class="mx-1" src="./images/delete.png" style="height:20px;" data-json='.$json.' onclick="handlepostdelete(this)">';
+                    }
+                    else
+                    {
+                        $links='<a href="./comment.php?id='.base64_encode($row["post_id"]).'&name='.base64_encode($category_name).'"><img class="mx-1" src="./images/comment.png" style="height:20px;"></a>';
+                    }
                 }
                 else
                 {
@@ -222,9 +232,16 @@
         $str="";
         while($row=mysqli_fetch_assoc($query))
         {
-            if($row["comment_by"]==session_check($_SESSION["email"],$_SESSION["password"],true))
+            if(isset($_SESSION["email"])&&isset($_SESSION["password"]))
             {
-                $links='<a href="./comment.php?name='.base64_encode($category_name).'&id='.base64_encode($id).'&c_id='.base64_encode($row["comment_id"]).'&del=true"><img src="./images/delete.png" style="height:20px;"></a>';
+                if($row["comment_by"]==session_check($_SESSION["email"],$_SESSION["password"],true))
+                {
+                    $links='<a href="./comment.php?name='.base64_encode($category_name).'&id='.base64_encode($id).'&c_id='.base64_encode($row["comment_id"]).'&del=true"><img src="./images/delete.png" style="height:20px;"></a>';
+                }
+                else
+                {
+                    $links="";
+                }
             }
             else
             {
